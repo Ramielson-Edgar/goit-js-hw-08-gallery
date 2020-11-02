@@ -13,7 +13,7 @@ html {
   box-sizing: inherit;
 }
 
-body.lightbox__overlay {
+body {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -35,16 +35,6 @@ body.lightbox__overlay {
   list-style: none;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 60px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity var(--animation-duration) var(--timing-function);
-}
-
-
-.gallery.is-open{
-   opacity: 1;
-  pointer-events: initial;
 }
 
 .gallery__item {
@@ -148,26 +138,3 @@ body.lightbox__overlay {
 .lightbox__button:focus {
   background-color: rgba(0, 0, 0, 0.5);
 }
-
-.gallery_window {
- position: absolute;
- left: 90px;
- top: 10px;
- width: 160px;
-  height: 40px;
-  background: #3360FF;
-   border-radius: 5px;
-   border-style: none;
-   color: white;
-   text-transform: uppercase;
-   border: none;
-}
-
-.gallery_window:hover {
-  box-shadow: 15px 14px 28px rgba(0, 0, 0, 0.15); 
-   transform: scale(1.03);
-  transition: transform var(--animation-duration) var(--timing-function);
-  
-}
-
-

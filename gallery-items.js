@@ -1,36 +1,88 @@
 import products from './js/exports.js';
-console.log(products)
 
-const linkImageItem = products
+const refs = {
+
+  $gallery:  document.querySelector('.gallery.js-gallery'),
+
+  $lightbox:  document.querySelector('.lightbox.js-lightbox'),
+
+  $lightboximage: document.querySelector('.lightbox__image'),
+  
+  $lightboxoverlay:  document.querySelector('.lightbox__overlay'),
+ 
+  $button: document.querySelector('button[data-action="close-lightbox"]') 
+    
+}
+
+const { $gallery, $lightbox, $lightboximage, $button , $lightboxoverlay} =refs
+
+const markUp  = creatGalleryElement(products)
+
+let initionalIdx = null
+
+
+$gallery.addEventListener('click', hadleClickGallery)
+$button.addEventListener('click', handleClickCloseButton)
+$lightboxoverlay.addEventListener('click', handleCloseModal)
+window.addEventListener('keydown', handleCloseModaShortcuts)
+
+function hadleClickGallery(e) {
+    e.preventDefault()
+    
+  if (e.target.nodeName === 'IMG') {
+
+    $lightbox.classList.add('is-open');
+    $lightboximage.src = e.target.dataset.source;
+    $lightboximage.alt = e.target.dataset.alt;
+ 
+  }
 
  
+}
+
+function handleClickCloseButton() {
+   handleCloseModal()
+   handleCloseModaShortcuts(e)
+
+}
+
+function handleCloseModal() {
+
+    $lightbox.classList.remove('is-open');
+    $lightboximage.src = ''
+    $lightboximage.alt = ''
+    initionalIdx = null
 
 
- const galleryEl = document.querySelector('.js-gallery')
+}
 
- const modalImg = document.querySelector('.js-lightbox')
-
- const fullImg = document.querySelector('.lightbox__image')
-
- const btnOpenGallery = document.querySelector('button[data-action="open-modla-window"]')
- 
- const btnAction = document.querySelector('button[data-action="close-lightbox"]')
+function handleCloseModaShortcuts(e) {
+    if (e.code === 'Escape') {
+    handleCloseModal()
+    } else if (e.code === 'ArrowRight') {
+          hadleNextImgaes()
+    } else if (e.code === 'ArrowLeft') {
+         hadlePrevImg() 
+    }
+    
   
-  
-  
+}
 
+function hadleNextImgaes() {
+    initionalIdx = products.length - 1 === initionalIdx ? 0 :  initionalIdx + 1;
+    const { description, original } = products[initionalIdx]
+    $lightboximage.src = original
+    $lightboximage.alt = description
+}
 
+function hadlePrevImg() {
+    initionalIdx = initionalIdx === 0 ? products.length - 1  : initionalIdx -1;
+    const { description, original } = products[initionalIdx]
+    $lightboximage.src = original
+    $lightboximage.alt = description
+}
 
-btnAction.addEventListener('click', btnCloseImagePrevieW)
-
-const markUp  = creatHTMEl(linkImageItem)
-
-galleryEl.addEventListener('click', openModalWindow)
-galleryEl.insertAdjacentHTML('beforeend', markUp)
-
-
-
-function creatHTMEl(code) {
+function creatGalleryElement(code) {
   return code.map(({ preview, original, description }) => {
     return `<li class="gallery__item">
   <a
@@ -46,49 +98,7 @@ function creatHTMEl(code) {
   </a>
 </li>` 
     }).join('')
-    
-
 
 }
 
-function openModalWindow(ev) {
-  ev.preventDefault()
-
-  if (ev.target.nodeName === 'IMG') {
-
-   modalImg.classList.add('is-open');
-    fullImg.src = ev.target.dataset.source;
-   fullImg.alt = ev.target.dataset.alt;
-  }
-
-
-
- 
-}
-
-function btnCloseImagePrevieW(event) {
-    event.preventDefault()
-
-  if (event.target.nodeName === 'BUTTON') {
-   modalImg.classList.remove('is-open');
-    fullImg.src = ev.target.src('')
-
-  }
-
-
-
-
-}
-
-
-btnOpenGallery.addEventListener('click',OpenGallery )
-
-
-function OpenGallery(e) {
-
-
-  if (e.target.nodeName === 'BUTTON') {
-  galleryEl.classList.toggle('is-open')
-  }
-
-}
+$gallery.insertAdjacentHTML('beforeend', markUp)
