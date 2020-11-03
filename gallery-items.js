@@ -14,11 +14,11 @@ const refs = {
     
 }
 
-const { $gallery, $lightbox, $lightboximage, $buttonActionClose , $lightboxoverlay} =refs
+const { $gallery, $lightbox, $lightboximage, $buttonActionClose , $lightboxoverlay} = refs
 
 const markup  = creatGalleryElement(items)
 
-let initionalIdx = null
+let currentIdx = null
 
 
 $gallery.addEventListener('click', hadleClickGallery)
@@ -52,29 +52,30 @@ function handleCloseModal() {
 
 function handleCloseModaShortcuts(e) {
     if (e.code === 'Escape') {
-      handleCloseModal()
+      handleCloseModal()   
     }
     
-   if (e.code === 'ArrowRight') {
-      hadleNextImgaes()
+     if (e.code === 'ArrowRight') {
+       hadleNextImgaes()
     }
-    
-   if (e.code === 'ArrowLeft') {
+  
+    if (e.code === 'ArrowLeft') {
       hadlePrevImg() 
-    }
-    
+  } 
+
+
 }
 
 function hadleNextImgaes() {
-    initionalIdx =  items.length - 1 === initionalIdx ? 0 : initionalIdx + 1;
-    const { description, original } = items[initionalIdx]
+    currentIdx = items.length - 1 === currentIdx ? 0 : currentIdx + 1;
+    const { description, original } = items[currentIdx]
     $lightboximage.src = original
     $lightboximage.alt = description
 }
 
 function hadlePrevImg() {
-    initionalIdx = initionalIdx === 0 ? items.length - 1 : initionalIdx -1;
-    const { description, original } = items[initionalIdx]
+    currentIdx = currentIdx === 0 ? items.length - 1 : currentIdx -1;
+    const { description, original } = items[currentIdx]
     $lightboximage.src = original
     $lightboximage.alt = description
 }
