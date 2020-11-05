@@ -1,4 +1,4 @@
-import items from './js/items.js';
+import galleryImg from './js/items.js';
 
 const refs = {
 
@@ -14,9 +14,7 @@ const refs = {
     
 }
 
-const { $gallery, $lightbox, $lightboximage, $buttonActionClose , $lightboxoverlay} = refs
-
-const markup  = creatGalleryElement(items)
+const { $gallery, $lightbox, $lightboximage, $buttonActionClose, $lightboxoverlay } = refs
 
 let currentIdx = null
 
@@ -24,69 +22,82 @@ let currentIdx = null
 $gallery.addEventListener('click', hadleClickGallery)
 $buttonActionClose.addEventListener('click', handleClickCloseButton)
 $lightboxoverlay.addEventListener('click', handleCloseModal)
-window.addEventListener('keydown', handleCloseModaShortcuts)
 
 function hadleClickGallery(e) {
-    e.preventDefault()
-    
-  if (e.target.nodeName === 'IMG') {
-    $lightbox.classList.add('is-open');
-    $lightboximage.src = e.target.dataset.source;
-    $lightboximage.alt = e.target.dataset.alt;
- 
+  e.preventDefault()
+  
+  const { dataset, alt, nodeName } = e.target 
+  
+  if (nodeName === 'IMG') {
+    const { source, id } = dataset
+    hendelModalOpen(source, alt, +id )
   }
 }
 
-function handleClickCloseButton() {
-   handleCloseModal()
-   handleCloseModaShortcuts(e)
+function hendelModalOpen(src, alt, id) {
 
+   $lightbox.classList.add('is-open');
+   $lightboximage.src = src
+   $lightboximage.alt = alt
+   currentIdx = id
+  window.addEventListener('keydown', hendKeypress)
+  
+}
+
+function handleClickCloseButton() {
+  handleCloseModal()
 }
 
 function handleCloseModal() {
     $lightbox.classList.remove('is-open');
     $lightboximage.src = ''
     $lightboximage.alt = ''
-    initionalIdx = null
+    currentIdx = null
+    window.removeEventListener('keypress', hendKeypress)
+
 }
 
-function handleCloseModaShortcuts(e) {
-    if (e.code === 'Escape') {
-      handleCloseModal()   
-    }
-    
-     if (e.code === 'ArrowRight') {
-       hadleNextImgaes()
-    }
-  
-    if (e.code === 'ArrowLeft') {
-      hadlePrevImg() 
-  } 
+function hendKeypress({code}) {
+  code === 'Escape' && handleCloseModal()
+  code === 'ArrowRight' && hadleNextImgaes()
+  code === 'ArrowLeft' && hadlePrevImg()
 
 
 }
 
 function hadleNextImgaes() {
-    currentIdx = items.length - 1 === currentIdx ? 0 : currentIdx + 1;
-    const { description, original } = items[currentIdx]
+    currentIdx =  galleryImg.length - 1 === currentIdx ? 0 : currentIdx + 1;
+    const {original, description } =  galleryImg[currentIdx]
     $lightboximage.src = original
     $lightboximage.alt = description
 }
 
 function hadlePrevImg() {
-    currentIdx = currentIdx === 0 ? items.length - 1 : currentIdx -1;
-    const { description, original } = items[currentIdx]
+    currentIdx = currentIdx === 0 ? galleryImg.length - 1 : currentIdx - 1;
+    const { original, description} = galleryImg[currentIdx]
     $lightboximage.src = original
     $lightboximage.alt = description
 }
 
-function creatGalleryElement(array) {
-  return array.map(({ preview, original, description }) => {
+function creatGalleryElementMarkup({ preview, original, description }, i) {
     return `<li class="gallery__item">
  <a class="gallery__link" href="${original}">
-<img class="gallery__image" src="${preview}" data-source="${original}" alt="${description}"/>
-</a> </li>` }).join('')
+
+<img data-id="${i}"class="gallery__image" 
+src="${preview}" data-source="${original}" 
+alt="${description}"/>
+</a> </li>` 
 
 }
 
-$gallery.insertAdjacentHTML('beforeend',markup)
+function creatGalleryMarkup(items) {
+  return items.map(creatGalleryElementMarkup).join('')
+}
+
+
+function renderGallery(markup) {
+  $gallery.insertAdjacentHTML('beforeend', markup)
+}
+
+
+renderGallery(creatGalleryMarkup(galleryImg))
