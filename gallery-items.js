@@ -52,8 +52,10 @@ function handleCloseModal() {
     $lightbox.classList.remove('is-open');
     $lightboximage.src = ''
     $lightboximage.alt = ''
-    currentIdx = null
-    window.removeEventListener('keypress', hendKeypress)
+  currentIdx = null
+  
+   window.removeEventListener('keypress', hendKeypress)
+    
 
 }
 
@@ -101,3 +103,5 @@ function renderGallery(markup) {
 
 
 renderGallery(creatGalleryMarkup(galleryImg))
+
+window
